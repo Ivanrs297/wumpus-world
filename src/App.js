@@ -57,7 +57,7 @@ class App extends Component {
       while (true){
         randX = Math.floor(Math.random() * 4)
         randY = Math.floor(Math.random() * 4)
-        if (randX != 0 && randY != 0){
+        if (randX !== 0 && randY !== 0){
           break;
         }
       }
@@ -205,8 +205,6 @@ class App extends Component {
       auxAgent.y = backMove.y;
     }
     else if (auxAgent.y - 1 >= 0 &&
-        !auxMatrix[auxAgent.y - 1][auxAgent.x].S &&
-        !auxMatrix[auxAgent.y - 1][auxAgent.x].B &&
         !auxMatrix[auxAgent.y - 1][auxAgent.x].P &&
         !auxMatrix[auxAgent.y - 1][auxAgent.x].V &&
         !auxMatrix[auxAgent.y - 1][auxAgent.x].W
@@ -221,8 +219,6 @@ class App extends Component {
         auxAgent.y -= 1
     }
     else if (auxAgent.y + 1 <= 3 &&
-      !auxMatrix[auxAgent.y + 1][auxAgent.x].S &&
-      !auxMatrix[auxAgent.y + 1][auxAgent.x].B &&
       !auxMatrix[auxAgent.y + 1][auxAgent.x].P &&
       !auxMatrix[auxAgent.y + 1][auxAgent.x].V &&
       !auxMatrix[auxAgent.y + 1][auxAgent.x].W
@@ -237,8 +233,6 @@ class App extends Component {
       auxAgent.y += 1
     }
     else if (auxAgent.x + 1 <= 3 &&
-      !auxMatrix[auxAgent.y][auxAgent.x + 1].S &&
-      !auxMatrix[auxAgent.y][auxAgent.x + 1].B &&
       !auxMatrix[auxAgent.y][auxAgent.x + 1].P &&
       !auxMatrix[auxAgent.y][auxAgent.x + 1].V &&
       !auxMatrix[auxAgent.y][auxAgent.x + 1].W
@@ -253,8 +247,6 @@ class App extends Component {
       auxAgent.x += 1
     }
     else if (auxAgent.x - 1 >= 0 &&
-      !auxMatrix[auxAgent.x][auxAgent.x - 1].S &&
-      !auxMatrix[auxAgent.x][auxAgent.x - 1].B &&
       !auxMatrix[auxAgent.x][auxAgent.x - 1].P &&
       !auxMatrix[auxAgent.x][auxAgent.x - 1].V &&
       !auxMatrix[auxAgent.x][auxAgent.x - 1].W
@@ -345,7 +337,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Wumpus World</h1>
+          <h1 className="App-title">Wumpus World 2018 - IRA</h1>
         </header>
 
         <div className="content">
