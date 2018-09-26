@@ -4,6 +4,8 @@ import { FaMale, FaOptinMonster, FaCircle, FaGem, FaPoo, FaAlignCenter, FaEye } 
 
 import './App.css';
 
+const timeout = ms => new Promise(res => setTimeout(res, ms))
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -23,6 +25,7 @@ class App extends Component {
       lost: false, // sin opciones
       dificultLevel: 1,
       gameStart: false,
+      onGame: false
     }
   }
 
@@ -42,6 +45,7 @@ class App extends Component {
       path: [{x: 0, y: 3}],
       won: false,
       lost: false,
+      onGame: false
     })
     await this.initWorld()
     
@@ -333,6 +337,15 @@ class App extends Component {
     this.setState({worldMatrix: matrix});
   }
 
+  async autoMoveAgent(){
+    this.setState({ onGame: true })
+    while (true){
+      if (this.state.won || this.state.lost){ return }
+      this.nextAgentMove()
+      await timeout(500);
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -367,10 +380,10 @@ class App extends Component {
                 <li>
                   <button
                     onClick={() => {
-                      this.nextAgentMove()
+                      this.autoMoveAgent()
                     }}
-                    disabled={this.state.won}
-                    className="btn btn-primary">Siguiente movimiento</button>
+                    disabled={this.state.won || this.state.lost || this.state.onGame}
+                    className="btn btn-success">Comenzar</button>
                 </li>
                 <li>
                   <button 
