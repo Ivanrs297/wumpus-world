@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FaMale, FaOptinMonster, FaCircle, FaGem, FaPoo, FaAlignCenter, FaEye } from 'react-icons/fa';
-import SweetAlert from 'sweetalert-react';
 
 
 import './App.css';
@@ -26,7 +25,8 @@ class App extends Component {
       lost: false, // sin opciones
       dificultLevel: 1,
       gameStart: false,
-      onGame: false
+      onGame: false,
+      sizeBoard: 5
     }
   }
 
@@ -71,12 +71,12 @@ class App extends Component {
     for (let i = 0; i < 2; i++){
       
       while (true){
-        randX = Math.floor((Math.random() * 4))
-        randY = Math.floor((Math.random() * 4))
+        randX = Math.floor((Math.random() * this.state.sizeBoard))
+        randY = Math.floor((Math.random() * this.state.sizeBoard))
         break;
       }
 
-      if(randX == 0 && randY == 3){
+      if(randX == 0 && randY == this.state.sizeBoard - 1){
         this.resetWorld();
       }
 
@@ -89,10 +89,10 @@ class App extends Component {
     //ubicacion de los agujeros
     let pits = [];
 
-    for (let y = 0; y <= 3; y++){
-      for (let x = 0; x <= 3; x++){
+    for (let y = 0; y <= this.state.sizeBoard - 1; y++){
+      for (let x = 0; x <= this.state.sizeBoard - 1; x++){
 
-        if (x === 0 && y === 3){
+        if (x === 0 && y === this.state.sizeBoard - 1){
           break;
         }
         if (Math.floor(Math.random() * 100) <= 20){
@@ -105,11 +105,11 @@ class App extends Component {
     }
     
     await this.setState({
-      agent: {x: 0, y: 3},
+      agent: {x: 0, y: this.state.sizeBoard - 1},
       monster: coords[0],
       pits: pits,
       gold: coords[1],
-      path: [{x: 0, y: 3}]
+      path: [{x: 0, y: this.state.sizeBoard - 1}]
     })
 
     await this.mapWorldMatrix();
@@ -117,6 +117,10 @@ class App extends Component {
 
   handleChangeLevel(e){
       this.setState({dificultLevel: parseInt(e.target.value) });
+  }
+
+  handleChangeSize(e){
+      this.setState({sizeBoard: parseInt(e.target.value) });
   }
 
   _renderAgent(){
@@ -184,7 +188,10 @@ class App extends Component {
           <tr key={indexY}>
             {itemY.map((itemX, indexX) =>{
               return(
-                <td key={indexX} >
+                <td 
+                  style={{width: 100 / this.state.sizeBoard}}
+                  key={indexX}
+                >
                   <p className="coordTxt">{(indexX + 1) + "," + (4 - indexY)}</p>
                     {itemX.V ? this._renderVisited() : null}
                     {itemX.P ? this._renderPit() : null }
@@ -235,7 +242,7 @@ class App extends Component {
         })
         auxAgent.y -= 1
     }
-    else if (auxAgent.y + 1 <= 3 &&
+    else if (auxAgent.y + 1 <= this.state.sizeBoard - 1 &&
       !auxMatrix[auxAgent.y + 1][auxAgent.x].P &&
       !auxMatrix[auxAgent.y + 1][auxAgent.x].V &&
       !auxMatrix[auxAgent.y + 1][auxAgent.x].W
@@ -249,7 +256,7 @@ class App extends Component {
       })
       auxAgent.y += 1
     }
-    else if (auxAgent.x + 1 <= 3 &&
+    else if (auxAgent.x + 1 <= this.state.sizeBoard - 1 &&
       !auxMatrix[auxAgent.y][auxAgent.x + 1].P &&
       !auxMatrix[auxAgent.y][auxAgent.x + 1].V &&
       !auxMatrix[auxAgent.y][auxAgent.x + 1].W
@@ -292,7 +299,7 @@ class App extends Component {
       await this.setState({ gotGold: true})
     }
 
-    if (this.state.agent.y === 3 && this.state.agent.x === 0 && this.state.gotGold ){
+    if (this.state.agent.y === this.state.sizeBoard - 1 && this.state.agent.x === 0 && this.state.gotGold ){
       await this.setState({ won: true})
     }
 
@@ -302,9 +309,9 @@ class App extends Component {
     let matrix = []
 
     // init matrix
-    for (let y = 0; y <= 3; y++){
+    for (let y = 0; y <= this.state.sizeBoard - 1; y++){
       matrix[y] = [];
-      for (let x = 0; x <= 3; x++){
+      for (let x = 0; x <= this.state.sizeBoard - 1; x++){
         matrix[y][x] = {
           A: false,  //Agent
           B: false,  //Breeze
@@ -325,9 +332,9 @@ class App extends Component {
       matrix[this.state.monster.y][this.state.monster.x].W = true;
       if (this.state.monster.y - 1 >= 0)
         matrix[this.state.monster.y - 1][this.state.monster.x].S = true
-      if (this.state.monster.y + 1 <= 3)
+      if (this.state.monster.y + 1 <= this.state.sizeBoard - 1)
         matrix[this.state.monster.y + 1][this.state.monster.x].S = true
-      if (this.state.monster.x + 1 <= 3)
+      if (this.state.monster.x + 1 <= this.state.sizeBoard - 1)
         matrix[this.state.monster.y][this.state.monster.x + 1].S = true
       if (this.state.monster.x - 1 >= 0)
         matrix[this.state.monster.y][this.state.monster.x - 1].S = true
@@ -338,11 +345,11 @@ class App extends Component {
         matrix[item.y][item.x].P = true;
         if (item.y - 1 >= 0)
           matrix[item.y - 1][item.x].B = true
-        if (item.y + 1 <= 3)
+        if (item.y + 1 <= this.state.sizeBoard - 1)
           matrix[item.y + 1][item.x].B = true
         if (item.x - 1 >= 0)
           matrix[item.y][item.x - 1].B = true
-        if (item.x + 1 <= 3)
+        if (item.x + 1 <= this.state.sizeBoard - 1)
           matrix[item.y][item.x + 1].B = true
       })
     }
@@ -378,15 +385,19 @@ class App extends Component {
             <li><FaMale color="#000066"/>  Agente  </li>
           </ul>
 
-          <div className="world">
-
-            
-
+          <div 
+            className="world"
+            // style={{
+            //   min-width: `${this.state.sizeBoard * 100}px;`,
+            //   max-width: `${this.state.sizeBoard * 100}px;`
+            // }}
+            style={{width: `${this.state.sizeBoard * 100}px`}}
+          >
             {this.state.gameStart ? this.renderBoard() : null}
           </div>
 
           <div className="menu">
-          
+
          
             {this.state.gameStart ?
               <ul className="list-inline">
@@ -423,6 +434,24 @@ class App extends Component {
                       <option value="1">Fácil</option>
                       <option value="2">Medio</option>
                       <option value="3">Dificil</option>
+                    </select>
+                  </div>
+                </li>
+                
+                <li>
+                  <div className="form-group">
+                    <label>Tamaño</label>
+                    <select 
+                      className="form-control"
+                      id="size"
+                      value={this.state.sizeBoard} 
+                      onChange={(e) => this.handleChangeSize(e)} 
+                    >
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
                     </select>
                   </div>
                 </li>
