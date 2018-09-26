@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FaMale, FaOptinMonster, FaCircle, FaGem, FaPoo, FaAlignCenter, FaEye } from 'react-icons/fa';
+import SweetAlert from 'sweetalert-react';
 
 
 import './App.css';
@@ -38,9 +39,20 @@ class App extends Component {
     await this.initWorld();
   }
 
-  async resetWorld(){
+  async resetAll(){
     await this.setState({ 
       gameStart: false,
+      gotGold: false,
+      path: [{x: 0, y: 3}],
+      won: false,
+      lost: false,
+      onGame: false
+    })
+    await this.initWorld()
+  }
+
+  async resetWorld(){
+    await this.setState({ 
       gotGold: false,
       path: [{x: 0, y: 3}],
       won: false,
@@ -59,11 +71,13 @@ class App extends Component {
     for (let i = 0; i < 2; i++){
       
       while (true){
-        randX = Math.floor(Math.random() * 4)
-        randY = Math.floor(Math.random() * 4)
-        if (randX !== 0 && randY !== 0){
-          break;
-        }
+        randX = Math.floor((Math.random() * 4))
+        randY = Math.floor((Math.random() * 4))
+        break;
+      }
+
+      if(randX == 0 && randY == 3){
+        this.resetWorld();
       }
 
       coords.push({
@@ -78,10 +92,9 @@ class App extends Component {
     for (let y = 0; y <= 3; y++){
       for (let x = 0; x <= 3; x++){
 
-        if (x === 0 && y === 0){
-          continue;
+        if (x === 0 && y === 3){
+          break;
         }
-
         if (Math.floor(Math.random() * 100) <= 20){
           pits.push({
             x: x,
@@ -388,7 +401,12 @@ class App extends Component {
                 <li>
                   <button 
                     onClick={() => this.resetWorld()}
-                    className="btn btn-danger">Resetear</button>
+                    className="btn btn-warning">Resetear</button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => this.resetAll()}
+                    className="btn btn-danger">Cambiar Dificultad</button>
                 </li>
               </ul>
             :
@@ -419,6 +437,7 @@ class App extends Component {
             }
             {this.state.won ?
               <h2>El agente se ha llevado el oro con éxito!</h2>
+              
             : null}
             {this.state.lost ?
               <h2>El agente se ha perdido :(</h2>
