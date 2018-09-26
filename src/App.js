@@ -385,17 +385,6 @@ class App extends Component {
             <li><FaMale color="#000066"/>  Agente  </li>
           </ul>
 
-          <div 
-            className="world"
-            // style={{
-            //   min-width: `${this.state.sizeBoard * 100}px;`,
-            //   max-width: `${this.state.sizeBoard * 100}px;`
-            // }}
-            style={{width: `${this.state.sizeBoard * 100}px`}}
-          >
-            {this.state.gameStart ? this.renderBoard() : null}
-          </div>
-
           <div className="menu">
 
          
@@ -474,6 +463,17 @@ class App extends Component {
           </div>
 
         </div>
+
+          <div 
+            className="world"
+            // style={{
+            //   min-width: `${this.state.sizeBoard * 100}px;`,
+            //   max-width: `${this.state.sizeBoard * 100}px;`
+            // }}
+            style={{width: `${this.state.sizeBoard * 100}px`}}
+          >
+            {this.state.gameStart ? this.renderBoard() : null}
+          </div>
 
       </div>
     );
