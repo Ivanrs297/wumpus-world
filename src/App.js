@@ -192,7 +192,7 @@ class App extends Component {
                   style={{width: 100 / this.state.sizeBoard}}
                   key={indexX}
                 >
-                  <p className="coordTxt">{(indexX + 1) + "," + (4 - indexY)}</p>
+                  <p className="coordTxt">{(indexX + 1) + "," + (this.state.sizeBoard - indexY)}</p>
                     {itemX.V ? this._renderVisited() : null}
                     {itemX.P ? this._renderPit() : null }
                     {itemX.W ? this._renderMonster() : null }
